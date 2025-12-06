@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Feedback</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+        /* Star rating styles */
+        .star-rating {
+            display: flex;
+            gap: 8px;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .star {
+            color: #ccc;
+            transition: 0.2s;
+        }
+        .star.selected {
+            color: gold;
+        }
+
+        /* Loader */
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 0.8s linear infinite;
+            margin: auto;
+            margin-top: 20px;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="text-center mb-4">Submit Your Feedback</h3>
+
+                    <form method="POST" onsubmit="showLoader()">
+                        {% csrf_token %}
+
+                        <!-- ⭐ Star Rating Widget -->
+                        <label class="form-label">Rating</label>
+                        <div class="star-rating mb-3">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
+                        </div>
+                        <input type="hidden" id="ratingInput" name="rating" required>
+
+                        <label class="form-label">Your Review</label>
+                        <textarea name="review" rows="5" class="form-control mb-3" required></textarea>
+
+                        <button class="btn btn-primary w-100">Submit</button>
+                    </form>
+
+                    <!-- Loader -->
+                    <div id="loadingSpinner" class="loader"></div>
+
+                    {% if ai_response %}
+                    <div class="alert alert-info mt-4">
+                        <h5 class="fw-bold">AI Response:</h5>
+                        <p>{{ ai_response }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // ⭐ STAR RATING LOGIC ⭐
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('ratingInput');
+
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            let value = star.getAttribute('data-value');
+            ratingInput.value = value;
+
+            stars.forEach(s => s.classList.remove('selected'));
+            for (let i = 0; i < value; i++) {
+                stars[i].classList.add('selected');
+            }
+        });
+    });
+
+    // ⭐ LOADING SPINNER ⭐
+    function showLoader() {
+        document.getElementById("loadingSpinner").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
