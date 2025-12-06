@@ -5,9 +5,13 @@ from .models import Submission
 from .serializers import SubmissionSerializer
 from django.shortcuts import render
 from django.db import models as djmodels
-
+from django.http import HttpResponse
 OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY')
 OPENROUTER_MODEL = os.getenv('OPENROUTER_MODEL', 'meta-llama/llama-3.1-70b-instruct')
+
+
+def debug_env(request):
+    return HttpResponse("OPENROUTER_API_KEY = " + str(os.getenv("OPENROUTER_API_KEY")))
 
 def call_openrouter(prompt):
     url = 'https://openrouter.ai/api/v1/chat/completions'
