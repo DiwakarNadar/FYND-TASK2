@@ -7,4 +7,6 @@ urlpatterns = [
     path('api/', include('feedback.urls')),
     path('', include('feedback.frontend_urls')),
     path("debug-env/", views.debug_env),
+    path("debug-headers/", debug_headers),
+
 ]
