@@ -10,15 +10,17 @@ OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY')
 OPENROUTER_MODEL = os.getenv('OPENROUTER_MODEL', 'meta-llama/llama-3.1-70b-instruct')
 
 
+
 def debug_env(request):
     return HttpResponse("OPENROUTER_API_KEY = " + str(os.getenv("OPENROUTER_API_KEY")))
 
 def call_openrouter(prompt):
     url = "https://openrouter.ai/api/v1/chat/completions"
+
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Referer": "https://fynd-task2.onrender.com/",  # required
-        "X-Title": "Fynd-Task2",                # required
+        "Referer": "https://fynd-task2.onrender.com/",
+        "X-Title": "FyndTask2",
         "Content-Type": "application/json",
     }
 
@@ -26,16 +28,23 @@ def call_openrouter(prompt):
         "model": OPENROUTER_MODEL,
         "messages": [
             {"role": "user", "content": prompt}
-        ]
+        ],
+        "temperature": 0.0
     }
 
     try:
         r = requests.post(url, headers=headers, json=body, timeout=30)
         r.raise_for_status()
-        data = r.json()
-        return data["choices"][0]["message"]["content"]
+        return r.json()["choices"][0]["message"]["content"]
     except Exception as e:
         return f"LLM Error: {e}"
+
+def debug_headers(request):
+    return HttpResponse(str({
+        "API_KEY": OPENROUTER_API_KEY[:10] + "...",
+        "MODEL": OPENROUTER_MODEL,
+        "REFERER_HEADER": "Referer in code"
+    }))
 
 @api_view(['POST'])
 def submit_review(request):
