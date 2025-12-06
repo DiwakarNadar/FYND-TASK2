@@ -5,4 +5,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('feedback.urls')),
     path('', include('feedback.frontend_urls')),
+    path("debug-env/", views.debug_env),
 ]
