@@ -17,7 +17,7 @@ def call_openrouter(prompt):
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "HTTP-Referer": "https://fynd-task2.onrender.com/",  # required
+        "Referer": "https://fynd-task2.onrender.com/",  # required
         "X-Title": "Fynd-Task2",                # required
         "Content-Type": "application/json",
     }
