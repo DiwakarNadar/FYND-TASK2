@@ -14,23 +14,28 @@ def debug_env(request):
     return HttpResponse("OPENROUTER_API_KEY = " + str(os.getenv("OPENROUTER_API_KEY")))
 
 def call_openrouter(prompt):
-    url = 'https://openrouter.ai/api/v1/chat/completions'
+    url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
-        'Authorization': f'Bearer {OPENROUTER_API_KEY}',
-        'Content-Type': 'application/json'
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "HTTP-Referer": "https://fynd-task2.onrender.com/",  # required
+        "X-Title": "Fynd-Task2",                # required
+        "Content-Type": "application/json",
     }
+
     body = {
-        'model': OPENROUTER_MODEL,
-        'messages': [{'role': 'user', 'content': prompt}],
-        'temperature': 0.0
+        "model": OPENROUTER_MODEL,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ]
     }
+
     try:
-        r = requests.post(url, json=body, headers=headers, timeout=30)
+        r = requests.post(url, headers=headers, json=body, timeout=30)
         r.raise_for_status()
         data = r.json()
-        return data['choices'][0]['message']['content']
+        return data["choices"][0]["message"]["content"]
     except Exception as e:
-        return f'LLM Error: {e}'
+        return f"LLM Error: {e}"
 
 @api_view(['POST'])
 def submit_review(request):
