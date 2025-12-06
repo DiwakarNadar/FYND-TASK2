@@ -21,6 +21,7 @@ def call_openrouter(prompt):
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Referer": "https://fynd-task2.onrender.com/",
         "X-Title": "FyndTask2",
+        "X-Request-ID": str(uuid.uuid4()),
         "Content-Type": "application/json",
     }
 
